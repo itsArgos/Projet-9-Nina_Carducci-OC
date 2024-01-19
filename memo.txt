@@ -1,0 +1,19 @@
+Commit : 
+
+- Ajout d'une width pour les slides 
+
+- Correction de la taille des images
+
+
+
+à faire : 
+
+- Supprimer le jQuery et remplacer en js
+
+- Minifier le code js
+
+- Refaire les images
+
+- Ajout de capture d'écran Rich snippet (https://search.google.com/test/rich-results?hl=fr)
+
+- Supprimer tout le code inutile ( regarder dans l'inspecteur : Couverture )

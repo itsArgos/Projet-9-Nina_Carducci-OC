@@ -24,16 +24,15 @@
 			"name": "Nina Carducci",
 			
 			"address": {
-				
 				"@type": "PostalAddress",
 				"streetAddress": "68 avenue Alsace-Lorraine",
 				"addressLocality": "Bordeaux, France",
-				"postalCode": "33200",
+				"postalCode": "33200"
 			},
 			
 			"telephone": "05 56 67 78 89",
 			"hours": "Lundi au Vendredi, 10h-19h",
-			"price": "Retouches - 50€/photo, Shooting - 350€/demi journée, Album A4 - 400€",
+			"priceRange": "Retouches - 50€/photo, Shooting - 350€/demi journée, Album A4 - 400€",
 
 			
 			"image": "https://nina-carducci.github.io/assets/images/nina.png",
@@ -51,10 +50,7 @@
 		href="https://fonts.googleapis.com/css2?family=Inter&family=Spectral:ital,wght@0,400;1,300;1,400;1,800&display=swap"
 		rel="stylesheet">
 	<script src="./assets/bootstrap/bootstrap.bundle.js"></script>
-	<script src="https://code.jquery.com/jquery-3.4.1.min.js"
-		integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-	<script src="./assets/maugallery.js"></script>
-	<script src="./assets/scripts.js"></script>
+	<script type="module" src="/assets/newscripts.js"></script>
 </head>
 
 <body>
@@ -67,12 +63,13 @@
 				<li><a href="#services">Service</a></li>
 				<li><a href="#contact">Contact</a></li>
 				<li><a class="social-link" href="https://www.instagram.com/ninacarducci.photo/?hl=fr"
-						target="_blank"><img src="assets/images/instagram.webp" alt="logo Instagram"></a></li>
+						target="_blank"><img src="assets/images/instagram.webp" alt="lien vers ma page Instagram"></a>
+				</li>
 			</ul>
 		</nav>
 	</section>
 	<header id="header">
-		<section id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+		<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
 			<div class="carousel-indicators">
 				<button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
 					aria-current="true" aria-label="Slide 1"></button>
@@ -105,7 +102,7 @@
 				<span class="carousel-control-next-icon" aria-hidden="true"></span>
 				<span class="visually-hidden">Next</span>
 			</button>
-		</section>
+		</div>
 	</header>
 
 	<main>
@@ -131,7 +128,7 @@
 			</div>
 		</section>
 		<section id="gallery">
-			<h3 class="title">Portfolio</h3>
+			<h2 class="title">Portfolio</h2>
 			<div class="container py-3">
 				<div class="gallery" style="display: none">
 					<img data-gallery-tag="Concert" class="gallery-item"
@@ -140,7 +137,7 @@
 						src="./assets/images/gallery/entreprise/ali-morshedlou-wmd64tmfc4k-unsplash.webp"
 						alt="ali morshedlou" />
 					<img data-gallery-tag="Entreprises" class="gallery-item"
-						src="./assets/images/gallery/entreprise/jason-goodman-tho1-oukbg0-unsplash.webp"
+						src="./assets/images/gallery/entreprise/jason-goodman-tHO1_OuKbg0-unsplash.webp"
 						alt="jason goodman" />
 					<img data-gallery-tag="Mariages" class="gallery-item"
 						src="./assets/images/gallery/mariage/hannah-busing-RvF2R_qMpRk-unsplash.webp"
@@ -163,11 +160,11 @@
 			<div class="quote">
 				<figure>
 					<blockquote>
-						<h1 class="quote__text">Un portrait n’est pas une ressemblance. Dès lors qu’une émotion ou qu’un
+						<h3 class="quote__text">Un portrait n’est pas une ressemblance. Dès lors qu’une émotion ou qu’un
 							fait est traduit en photo, il cesse d’être un fait pour devenir une opinion. L’inexactitude
 							n’existe pas en photographie. Toutes les photos sont exactes. Aucune d’elles n’est la
 							vérité.
-						</h1>
+						</h3>
 					</blockquote>
 					<figcaption class="quote__author">- Richard Avedon</figcaption>
 				</figure>
@@ -230,7 +227,7 @@
 			<div class="form-container">
 				<h3>Une question ? Une demande de devis ?</h3>
 				<p> N’hésitez pas à m’écrire ! Je vous répondrais en moins de 24 heures</p>
-				<form action="" method="post">
+				<form method="post">
 					<label for="nom">Nom</label>
 					<input type="text" name="nom" id="nom">
 					<label for="email">Email</label>
