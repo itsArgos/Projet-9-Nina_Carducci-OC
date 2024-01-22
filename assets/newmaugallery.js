@@ -47,8 +47,8 @@ function mauGallery(option) {
 
     galleryItem.forEach(function (item) {
       item.addEventListener("click", function () {
-        if (options.lightBox && item.tagName === "IMG") {
-          openLightBox(item, options.lightboxId);
+        if (item.tagName === "IMG") {
+          openLightBox(item);
         } else {
           return;
         }
@@ -129,66 +129,48 @@ function mauGallery(option) {
     }
   }
 
-  function openLightBox(element, lightboxId) {
-    const modale = document.querySelector(`#${lightboxId}`);
+  let currentPicture = null;
+
+  const modale = document.querySelector(`dialog`);
+
+  function openLightBox(element) {
+    if (!element) {
+      modale.close();
+      return;
+    }
+
+    currentPicture = element;
+
     modale.querySelector(".lightboxImage").src = element.src;
+    modale.addEventListener("click", function (event) {
+      if (event.target === modale) {
+        modale.close();
+      }
+    });
     modale.showModal();
   }
 
-  // function changeImage(lightboxId, direction) {
-  //   const activeImage = document.querySelector(".lightboxImage");
-  //   if (!activeImage) return;
+  function changeImage(direction) {
+    modale.close();
+    openLightBox(
+      currentPicture.parentNode[`${direction}Sibling`]?.querySelector("img")
+    );
+  }
 
-  //   const activeImageSrc = activeImage.src;
-  //   let activeTag = document
-  //     .querySelector(".tags-bar span.active-tag")
-  //     .getAttribute("data-images-toggle");
-  //   let imagesCollection = [];
-
-  //   let selectionneImages = function (img) {
-  //     if (
-  //       activeTag === "all" ||
-  //       img.getAttribute("data-gallery-tag") === activeTag
-  //     ) {
-  //       imagesCollection.push(img);
-  //     }
-  //   };
-
-  //   document.querySelectorAll(".item-column img").forEach(selectionneImages);
-
-  //   let currentIndex = imagesCollection.findIndex(function (img) {
-  //     return img.src === activeImageSrc;
-  //   });
-
-  //   let newIndex =
-  //     (currentIndex + direction + imagesCollection.length) %
-  //     imagesCollection.length;
-
-  //   activeImage.src = imagesCollection[newIndex].src;
-  // }
+  const btnPrev = modale.querySelector("button:first-child");
+  const btnNext = modale.querySelector("button:last-child");
+  btnPrev.addEventListener("click", () => changeImage("previous"));
+  btnNext.addEventListener("click", () => changeImage("next"));
 
   function createLightBox(gallery, lightboxId, navigation) {
     const modal = document.createElement("dialog");
+    const galleryContent = document.createElement("div");
+
     modal.id = lightboxId || "galleryLightbox";
     modal.role = "dialog";
 
-    const galleryContent = document.createElement("div");
-
     galleryContent.classList.add("modal-content");
-
-    galleryContent.innerHTML = ` 
-    ${
-      navigation
-        ? '<div class="mg-prev" style="cursor:pointer;position:absolute;top:50%;left:-15px;background:white;"><</div>'
-        : '<span style="" />'
-    }
-    <img class="lightboxImage img-fluid" alt="Contenu de l'image affichée dans la modale au clique"/>
-    ${
-      navigation
-        ? '<div class="mg-next" style="cursor:pointer;position:absolute;top:50%;right:-15px;background:white;}">></div>'
-        : '<span style="" />'
-    }
-  </div>`;
+    galleryContent.innerHTML = `<button class="btn-left" > &lt; </button> <img class="lightboxImage img-fluid" alt="Contenu de l'image affichée dans la modale au clique"/> <button class="btn-right"> &gt; </button>`;
 
     modal.appendChild(galleryContent);
     document.body.appendChild(modal);
@@ -231,7 +213,7 @@ function mauGallery(option) {
       event.closest(".item-column").style.display = "none";
       if (tag === "all") {
         event.closest(".item-column").style.display = "block";
-      } else if (item.getAttribute("data-gallery-tag") === tag) {
+      } else if (event.getAttribute("data-gallery-tag") === tag) {
         event.closest(".item-column").style.display = "block";
       }
     });

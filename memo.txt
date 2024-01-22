@@ -1,8 +1,5 @@
 Commit : 
 
-- Ajout d'une width pour les slides 
-
-- Correction de la taille des images
 
 
 
