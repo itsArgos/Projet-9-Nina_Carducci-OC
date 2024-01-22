@@ -17,7 +17,7 @@ function mauGallery(option) {
       moveItemInRowWrapper(item);
       wrapItemInColumn(item, options.columns);
 
-      let theTag = item.setAttribute("data-gallery-tag", "");
+      let theTag = item.getAttribute("data-gallery-tag");
       if (
         options.showTags &&
         theTag !== undefined &&
@@ -30,8 +30,7 @@ function mauGallery(option) {
     if (options.showTags) {
       showItemTags(gallery, options.tagsPosition, tagsCollection);
     }
-    // *** Faire une transition en CSS de 0.5s à la place du fadeIn ***
-    // $(this).fadeIn(500);
+    gallery.style.display = "block";
   });
 
   mauGallery.defaults = {
@@ -59,23 +58,20 @@ function mauGallery(option) {
     document.querySelector(".gallery").addEventListener("click", (event) => {
       const target = event.target;
 
-      target.classList.contains("nav-link")
-        ? filterByTag(target)
-        : target.classList.contains("mg-prev")
-        ? prevImage(options.lightboxId)
-        : target.classList.contains("mg-next")
-        ? nextImage(options.lightboxId)
-        : null;
+      if (target.classList.contains("nav-link")) {
+        filterByTag(target);
+      } else if (target.classList.contains("mg-prev")) {
+        prevImage(options.lightboxId);
+      } else if (target.classList.contains("mg-next")) {
+        nextImage(options.lightboxId);
+      }
     });
   }
-  // La fonction prend "element" en tant que paramètre
+
   function createRowWrapper(element) {
-    // Vérifie si le premier enfant de l'élément ne possède pas la classe "row"
     if (!element.children[0].classList.contains("row")) {
       const rowWrapper = document.createElement("div");
-      // Ajoute les classes "gallery-items-row" et "row" nouvel élément crée
       rowWrapper.classList.add("gallery-items-row", "row");
-      // Met le nouvel élément à l'intérieur de l'élément existant.
       element.appendChild(rowWrapper);
     }
   }
@@ -139,108 +135,67 @@ function mauGallery(option) {
     modale.showModal();
   }
 
-  // function prevImage() {
-  //   let activeImage = document.querySelector(".lightboxImage");
+  // function changeImage(lightboxId, direction) {
+  //   const activeImage = document.querySelector(".lightboxImage");
   //   if (!activeImage) return;
 
-  //   let activeTag = document.querySelector(".tags-bar span.active-tag").getAttribute("data-images-toggle");
-
+  //   const activeImageSrc = activeImage.src;
+  //   let activeTag = document
+  //     .querySelector(".tags-bar span.active-tag")
+  //     .getAttribute("data-images-toggle");
   //   let imagesCollection = [];
 
-  //   if (activeTag === "all") {
-  //     document.querySelectorAll(".item-column img").forEach(function (img) {
+  //   let selectionneImages = function (img) {
+  //     if (
+  //       activeTag === "all" ||
+  //       img.getAttribute("data-gallery-tag") === activeTag
+  //     ) {
   //       imagesCollection.push(img);
-  //     });
-  //   } else {
-  //     document.querySelectorAll(".item-column img").forEach(function (img) {
-  //       const galleryTag = img.getAttribute("data-gallery-tag");
-  //       if (galleryTag === activeTag) {
-  //         imagesCollection.push(img);
-  //       }
-  //     });
-  //   }
-
-  //   let index = 0,
-  //   next = null;
-
-  //   $(imagesCollection).each(function (i) {
-  //     if ($(activeImage).attr("src") === $(this).attr("src")) {
-  //       index = i - 1;
   //     }
-  //   });
-  //   next =
-  //   imagesCollection[index] ||
-  //   imagesCollection[imagesCollection.length - 1];
-  //   $(".lightboxImage").attr("src", $(next).attr("src"));
-  // }
+  //   };
 
-  // function nextImage() {
-  //   let activeImage = null;
-  //   $("img.gallery-item").each(function () {
-  //     if ($(this).attr("src") === $(".lightboxImage").attr("src")) {
-  //       activeImage = $(this);
-  //     }
-  //   });
-  //   let activeTag = $(".tags-bar span.active-tag").data("images-toggle");
-  //   let imagesCollection = [];
-  //   if (activeTag === "all") {
-  //     $(".item-column").each(function () {
-  //       if ($(this).children("img").length) {
-  //         imagesCollection.push($(this).children("img"));
-  //       }
-  //     });
-  //   } else {
-  //     $(".item-column").each(function () {
-  //       if ($(this).children("img").data("gallery-tag") === activeTag) {
-  //         imagesCollection.push($(this).children("img"));
-  //       }
-  //     });
-  //   }
-  //   let index = 0,
-  //   next = null;
+  //   document.querySelectorAll(".item-column img").forEach(selectionneImages);
 
-  //   $(imagesCollection).each(function (i) {
-  //     if ($(activeImage).attr("src") === $(this).attr("src")) {
-  //       index = i + 1;
-  //     }
+  //   let currentIndex = imagesCollection.findIndex(function (img) {
+  //     return img.src === activeImageSrc;
   //   });
-  //   next = imagesCollection[index] || imagesCollection[0];
-  //   $(".lightboxImage").attr("src", $(next).attr("src"));
+
+  //   let newIndex =
+  //     (currentIndex + direction + imagesCollection.length) %
+  //     imagesCollection.length;
+
+  //   activeImage.src = imagesCollection[newIndex].src;
   // }
 
   function createLightBox(gallery, lightboxId, navigation) {
-    const modal = document.createElement("div");
-    modal.classList.add("modal", "fade");
+    const modal = document.createElement("dialog");
     modal.id = lightboxId || "galleryLightbox";
-    modal.tabIndex = -1;
     modal.role = "dialog";
-    modal.ariaHidden = true;
 
     const galleryContent = document.createElement("div");
+
     galleryContent.classList.add("modal-content");
 
-    galleryContent.innerHTML = ` <div class="modal-body">  
-        ${
-          navigation
-            ? '<div class="mg-prev" style="cursor:pointer;position:absolute;top:50%;left:-15px;background:white;"><</div>'
-            : '<span style="display:none;" />'
-        }
-        <img class="lightboxImage img-fluid" alt="Contenu de l'image affichée dans la modale au clique"/>
-        ${
-          navigation
-            ? '<div class="mg-next" style="cursor:pointer;position:absolute;top:50%;right:-15px;background:white;}">></div>'
-            : '<span style="display:none;" />'
-        }
-        </div>`;
+    galleryContent.innerHTML = ` 
+    ${
+      navigation
+        ? '<div class="mg-prev" style="cursor:pointer;position:absolute;top:50%;left:-15px;background:white;"><</div>'
+        : '<span style="" />'
+    }
+    <img class="lightboxImage img-fluid" alt="Contenu de l'image affichée dans la modale au clique"/>
+    ${
+      navigation
+        ? '<div class="mg-next" style="cursor:pointer;position:absolute;top:50%;right:-15px;background:white;}">></div>'
+        : '<span style="" />'
+    }
+  </div>`;
 
-    modal.classList.add("modal-dialog");
     modal.appendChild(galleryContent);
-
-    gallery.appendChild(modal);
+    document.body.appendChild(modal);
   }
 
   function showItemTags(gallery, position, tags) {
-    const tagItems = `<li class="nav-item"><span class="nav-link active active-tag"  data-images-toggle="all">Tous</span></li>`;
+    let tagItems = `<li class="nav-item"><span class="nav-link active active-tag"  data-images-toggle="all">Tous</span></li>`;
 
     tags.forEach(function (value) {
       tagItems += `<li class="nav-item active">
