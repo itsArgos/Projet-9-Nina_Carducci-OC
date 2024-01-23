@@ -9,21 +9,32 @@ function mauGallery(option) {
     if (options.lightBox) {
       createLightBox(gallery, options.lightboxId, options.navigation);
     }
-
     listeners(options);
+
+    function moveItemInRowWrapper(element) {
+      element.parentNode
+        .querySelector(".gallery-items-row")
+        .appendChild(element);
+    }
+
+    function responsiveImageItem(element) {
+      if (element.tagName === "IMG") {
+        element.classList.add("img-fluid");
+      }
+    }
 
     gallery.querySelectorAll(".gallery-item").forEach(function (item) {
       responsiveImageItem(item);
       moveItemInRowWrapper(item);
       wrapItemInColumn(item, options.columns);
 
-      let theTag = item.getAttribute("data-gallery-tag");
+      let galleryTag = item.getAttribute("data-gallery-tag");
       if (
         options.showTags &&
-        theTag !== undefined &&
-        tagsCollection.indexOf(theTag) === -1
+        galleryTag !== undefined &&
+        tagsCollection.indexOf(galleryTag) === -1
       ) {
-        tagsCollection.push(theTag);
+        tagsCollection.push(galleryTag);
       }
     });
 
@@ -44,6 +55,7 @@ function mauGallery(option) {
 
   function listeners(options) {
     const galleryItem = document.querySelectorAll(".gallery-item");
+    const gallery = document.querySelector(".gallery");
 
     galleryItem.forEach(function (item) {
       item.addEventListener("click", function () {
@@ -55,7 +67,7 @@ function mauGallery(option) {
       });
     });
 
-    document.querySelector(".gallery").addEventListener("click", (event) => {
+    gallery.addEventListener("click", (event) => {
       const target = event.target;
 
       if (target.classList.contains("nav-link")) {
@@ -69,10 +81,12 @@ function mauGallery(option) {
   }
 
   function createRowWrapper(element) {
-    if (!element.children[0].classList.contains("row")) {
+    const firstChild = element.children[0];
+
+    if (!firstChild?.classList.contains("row")) {
       const rowWrapper = document.createElement("div");
       rowWrapper.classList.add("gallery-items-row", "row");
-      element.appendChild(rowWrapper);
+      element.insertBefore(rowWrapper, firstChild);
     }
   }
 
@@ -105,27 +119,17 @@ function mauGallery(option) {
         columnClasses += " col-xl-" + Math.ceil(12 / columns.xl);
       }
 
-      const column = document.createElement("div");
-      column.className = "item-column mb-4 " + columnClasses;
+      const columnDiv = document.createElement("div");
+      columnDiv.className = "item-column mb-4 " + columnClasses;
 
-      element.parentNode.insertBefore(column, element);
-      column.appendChild(element);
+      element.parentNode.insertBefore(columnDiv, element);
+      columnDiv.appendChild(element);
     } else {
       console.error(
         "Columns should be defined as numbers or objects." +
           typeof columns +
           "is not supported."
       );
-    }
-  }
-
-  function moveItemInRowWrapper(element) {
-    element.parentNode.querySelector(".gallery-items-row").appendChild(element);
-  }
-
-  function responsiveImageItem(element) {
-    if (element.tagName === "IMG") {
-      element.classList.add("img-fluid");
     }
   }
 
@@ -138,7 +142,6 @@ function mauGallery(option) {
       modale.close();
       return;
     }
-
     currentPicture = element;
 
     modale.querySelector(".lightboxImage").src = element.src;
@@ -176,48 +179,49 @@ function mauGallery(option) {
     document.body.appendChild(modal);
   }
 
-  function showItemTags(gallery, position, tags) {
+  function showItemTags(gallery, position, tag) {
     let tagItems = `<li class="nav-item"><span class="nav-link active active-tag"  data-images-toggle="all">Tous</span></li>`;
 
-    tags.forEach(function (value) {
+    tag.forEach(function (value) {
       tagItems += `<li class="nav-item active">
-          <span class="nav-link"  data-images-toggle="${value}">${value}</span></li>`;
+            <span class="nav-link"  data-images-toggle="${value}">${value}</span></li>`;
     });
 
-    const tagsRow = document.createElement("ul");
-    tagsRow.classList.add("my-4", "tags-bar", "nav", "nav-pills");
-    tagsRow.innerHTML = tagItems;
+    const tagRow = document.createElement("ul");
+    tagRow.classList.add("my-4", "tags-bar", "nav", "nav-pills");
+    tagRow.innerHTML = tagItems;
 
     if (position === "bottom") {
-      gallery.appendChild(tagsRow);
+      gallery.appendChild(tagRow);
     } else if (position === "top") {
-      gallery.insertBefore(tagsRow, gallery.firstChild);
+      gallery.insertBefore(tagRow, gallery.firstChild);
     } else {
       console.error("Unknown tags position: " + position);
     }
   }
 
   function filterByTag(filterTag) {
+    const activeTag = document.querySelectorAll(".active.active-tag");
+    const galleryItem = document.querySelectorAll(".gallery-item");
+
     if (filterTag.classList.contains("active-tag")) {
       return;
     }
-    const activeTags = document.querySelectorAll(".active.active-tag");
-    activeTags.forEach(function (tag) {
+    activeTag.forEach(function (tag) {
       tag.classList.remove("active", "active-tag");
     });
 
     filterTag.classList.add("active-tag", "active");
     const tag = filterTag.getAttribute("data-images-toggle");
 
-    document.querySelectorAll(".gallery-item").forEach(function (event) {
-      event.closest(".item-column").style.display = "none";
+    galleryItem.forEach(function (category) {
+      category.closest(".item-column").style.display = "none";
       if (tag === "all") {
-        event.closest(".item-column").style.display = "block";
-      } else if (event.getAttribute("data-gallery-tag") === tag) {
-        event.closest(".item-column").style.display = "block";
+        category.closest(".item-column").style.display = "block";
+      } else if (category.getAttribute("data-gallery-tag") === tag) {
+        category.closest(".item-column").style.display = "block";
       }
     });
   }
 }
-
 export default mauGallery;
