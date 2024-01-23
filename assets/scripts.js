@@ -1,4 +1,4 @@
-import mauGallery from "./maugallery.js";
+import mauGallery from "./maugallery.min.js";
 
 document.addEventListener("DOMContentLoaded", function () {
   mauGallery({
