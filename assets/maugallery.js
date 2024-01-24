@@ -42,12 +42,13 @@ function mauGallery(option) {
     }
 
     // Sélectionne tous les éléments avec la classe "gallery-item" dans la galerie
+    let tagsCollection = [];
+
     gallery.querySelectorAll(".gallery-item").forEach(function (item) {
       responsiveImageItem(item);
       moveItemInRowWrapper(item);
       // Enveloppe l'élément dans une colonne en fonction du nombre de colonnes spécifié dans les options
       wrapItemInColumn(item, options.columns);
-      let tagsCollection = [];
 
       let galleryTag = item.getAttribute("data-gallery-tag");
       // Vérifie si les tags doivent être affichées, si un tag est présent et si il n'est pas déjà dans la collection
@@ -194,7 +195,7 @@ function mauGallery(option) {
     modal.role = "dialog";
 
     galleryContent.classList.add("modal-content");
-    galleryContent.innerHTML = `<button class="btn-left" > &lt; </button> <img class="lightboxImage img-fluid" alt="Contenu de l'image affichée dans la modale au clique"/> <button class="btn-right"> &gt; </button>`;
+    galleryContent.innerHTML = `<button title="image précédente" class="btn-left" > &lt; </button> <img class="lightboxImage img-fluid" alt="Contenu de l'image affichée dans la modale au clique"/> <button title="image suivante" class="btn-right"> &gt; </button>`;
 
     modal.appendChild(galleryContent);
     document.body.appendChild(modal);
