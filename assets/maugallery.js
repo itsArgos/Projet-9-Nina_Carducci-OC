@@ -1,17 +1,35 @@
 function mauGallery(option) {
-  const options = { ...mauGallery.defaults, ...option };
   const galleryContainer = document.querySelectorAll(".gallery");
-  let tagsCollection = [];
 
+  mauGallery.defaults = {
+    columns: 3,
+    lightBox: true,
+    lightboxId: null,
+    showTags: true,
+    tagsPosition: "bottom",
+    navigation: true,
+  };
+
+  // Crée un objet options en fusionnant les valeurs par défaut de mauGallery.defaults
+  // avec les options fournies en paramètre (option).
+  const options = { ...mauGallery.defaults, ...option };
+
+  // Pour chaque élément (gallery) dans le conteneur de galerie (galleryContainer).
   galleryContainer.forEach(function (gallery) {
+    // Appelle la fonction createRowWrapper avec l'élément actuel de la galerie.
     createRowWrapper(gallery);
 
+    // Si l'option lightBox est activée
     if (options.lightBox) {
+      // Appelle la fonction createLightBox avec le conteneur de galerie (gallery),
+      // l'id de la lightbox (options.lightboxId), et les options de navigation (options.navigation).
       createLightBox(gallery, options.lightboxId, options.navigation);
     }
     listeners(options);
 
     function moveItemInRowWrapper(element) {
+      // Accède au parent de l'élément, puis recherche le premier élément avec la classe ".gallery-items-row".
+      // Ensuite, ajoute (element) aux enfants.
       element.parentNode
         .querySelector(".gallery-items-row")
         .appendChild(element);
@@ -23,45 +41,48 @@ function mauGallery(option) {
       }
     }
 
+    // Sélectionne tous les éléments avec la classe "gallery-item" dans la galerie
     gallery.querySelectorAll(".gallery-item").forEach(function (item) {
       responsiveImageItem(item);
       moveItemInRowWrapper(item);
+      // Enveloppe l'élément dans une colonne en fonction du nombre de colonnes spécifié dans les options
       wrapItemInColumn(item, options.columns);
+      let tagsCollection = [];
 
       let galleryTag = item.getAttribute("data-gallery-tag");
+      // Vérifie si les tags doivent être affichées, si un tag est présent et si il n'est pas déjà dans la collection
       if (
         options.showTags &&
         galleryTag !== undefined &&
         tagsCollection.indexOf(galleryTag) === -1
       ) {
+        // Ajoute le tag à la collection si elle n'est pas déjà présente
         tagsCollection.push(galleryTag);
       }
     });
-
+    // Vérifie si l'option pour afficher les tags est activée
     if (options.showTags) {
+      // Alors il affiche les tags associées à la galerie en utilisant la fonction showItemTags
+      // avec la position spécifiée dans les options et la collection de balises
       showItemTags(gallery, options.tagsPosition, tagsCollection);
     }
+    // Affiche la galerie en changeant le style d'affichage à "block"
     gallery.style.display = "block";
   });
-
-  mauGallery.defaults = {
-    columns: 3,
-    lightBox: true,
-    lightboxId: null,
-    showTags: true,
-    tagsPosition: "bottom",
-    navigation: true,
-  };
 
   function listeners(options) {
     const galleryItem = document.querySelectorAll(".gallery-item");
     const gallery = document.querySelector(".gallery");
 
+    // Pour chaque élément dans la collection galleryItem
     galleryItem.forEach(function (item) {
       item.addEventListener("click", function () {
+        // Vérifie si l'élément cliqué est une balise d'image (IMG)
         if (item.tagName === "IMG") {
+          // Si c'est le cas, ouvre la lightbox en passant l'élément image cliqué à la fonction openLightBox
           openLightBox(item);
         } else {
+          // Si l'élément n'est pas une balise d'image, ne fait rien
           return;
         }
       });
