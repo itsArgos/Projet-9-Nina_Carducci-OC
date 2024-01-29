@@ -6,6 +6,7 @@ body {
 * {
 	font-family: 'Inter';
 	font-style: normal;
+	border: none;
 }
 
 .top-header {
@@ -109,12 +110,10 @@ body {
 .btn-left {
 	position: absolute;
 	width: 20px;
-	left: 0;
+	left: -8px;
 	top: 50%;
-	border: none;
 	outline: none;
 	background: none;
-	text-decoration: none;
 	padding: 0;
 	font-size: 20px;
 	padding-right: 5px;
@@ -123,9 +122,8 @@ body {
 .btn-right {
 	position: absolute;
 	width: 20px;
-	right: 0;
+	right: -8px;
 	top: 50%;
-	border: none;
 	background: none;
 	padding: 0;
 	font-size: 20px;
